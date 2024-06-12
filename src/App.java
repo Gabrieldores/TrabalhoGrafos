@@ -1,10 +1,12 @@
 /*
- * Tarefas : - Arrumar o método criar grafo
- * - Fazer as representações em matriz de adjascencia ou lista de adjascencia 
+ * Tarefas : - 
+ * - lista de adjascencia 
  * - Depois fazer a verificação se um grafo ele é denso ou esparso
- * - Depois começar a fazer a busca em largura e em profundidade
+ * - Verificação em DIMACS
  */
 
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.Scanner;
 
 public class App {
@@ -38,11 +40,15 @@ public class App {
                     grafo.CriarGrafo(grafo);
                     break;
                 case 2:
-                    // Aqui deve ter a lógica para grafos densos ou esparsos
+                    grafo.imprimirMatrizAdjacencia();
                     
                     break;
                 case 3:
-                    // Lógica para ler o grafo em DIMACS
+                    Map<String, ArrayList<String>> listasAdjacencia = grafo.criarListasAdjacencia();
+        System.out.println("Listas de Adjacência:");
+        for (Map.Entry<String, ArrayList<String>> entry : listasAdjacencia.entrySet()) {
+            System.out.println(entry.getKey() + " -> " + entry.getValue());
+        }
                     break;
                 case 4:
                     

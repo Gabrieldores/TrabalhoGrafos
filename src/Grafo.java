@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Grafo <Tipo> {
@@ -9,39 +11,7 @@ public class Grafo <Tipo> {
         this.vertices = new ArrayList<Vertice<Tipo>>();
         this.arestas = new ArrayList<Aresta<Tipo>>();
     }
-     public static void CriarGrafo(Grafo grafo){
-        Scanner sc = new Scanner(System.in); 
-        String texto;
-        System.out.println("Quantos vértices no grafo você quer adicionar?");
-        int NumVertices = sc.nextInt();
-        System.out.println("Quantas arestas você quer adicionar ?");
-        int NumArestas = sc.nextInt();
-        String Saida;
-        double peso;
-
-        System.out.println("Preencha o valor dos vértices");
-        for(int i = 0;i < NumVertices; i ++){
-            texto = sc.nextLine();
-            grafo.adicionarVertice(texto);
-        }
-
-        System.out.println("Preencha o valor das arestas : ");
-        for(int j = 0; j < NumArestas; j++){
-            System.out.print("Origem :");
-           texto = sc.nextLine();
-            System.out.println("Saida");
-            Saida = sc.nextLine();
-            System.out.println("Peso");
-            peso = sc.nextInt();
-
-            grafo.adicionarAresta(peso, texto, Saida);
-            
-        }
-
-        System.out.println("Grafo criado!!!");
-
-    }
-
+   
 
     public void adicionarVertice(Tipo dado){
         Vertice<Tipo> novoVertice = new Vertice<Tipo>(dado);
@@ -67,6 +37,39 @@ public class Grafo <Tipo> {
         }
         return vertice;
     } 
+    public static <Tipo> void CriarGrafo(Grafo<Tipo> grafo) {
+        Scanner sc = new Scanner(System.in);
+        String texto;
+
+        System.out.println("Quantos vértices no grafo você quer adicionar?");
+        int NumVertices = sc.nextInt();
+        sc.nextLine(); // Limpar o buffer após a leitura do número inteiro
+
+        System.out.println("Preencha o valor dos vértices:");
+        for (int i = 0; i < NumVertices; i++) {
+            texto = sc.nextLine();
+            grafo.adicionarVertice((Tipo) texto);
+        }
+
+        System.out.println("Quantas arestas você quer adicionar?");
+        int NumArestas = sc.nextInt();
+        sc.nextLine(); // Limpar o buffer após a leitura do número inteiro
+
+        System.out.println("Preencha o valor das arestas:");
+        for (int j = 0; j < NumArestas; j++) {
+            System.out.print("Origem: ");
+            String origem = sc.nextLine();
+            System.out.print("Saída: ");
+            String saida = sc.nextLine();
+            System.out.print("Peso: ");
+            double peso = sc.nextDouble();
+            sc.nextLine(); // Limpar o buffer após a leitura do número decimal
+
+            grafo.adicionarAresta(peso, (Tipo) origem, (Tipo) saida);
+        }
+
+        System.out.println("Grafo criado!!!");
+    }
 
     public void imprimirMatrizAdjacencia() {
         int tamanho = this.vertices.size();
@@ -94,6 +97,21 @@ public class Grafo <Tipo> {
             }
             System.out.println();
         }
+    }
+
+    public Map<Tipo, ArrayList<Tipo>> criarListasAdjacencia() {
+        Map<Tipo, ArrayList<Tipo>> listasAdjacencia = new HashMap<>();
+
+        for (Vertice<Tipo> vertice : vertices) {
+            ArrayList<Tipo> adjacentes = new ArrayList<>();
+            for (Aresta<Tipo> aresta : vertice.getArestasSaida()) {
+                Vertice<Tipo> destino = aresta.getSaida();
+                adjacentes.add(destino.getDado());
+            }
+            listasAdjacencia.put(vertice.getDado(), adjacentes);
+        }
+
+        return listasAdjacencia;
     }
 
 
