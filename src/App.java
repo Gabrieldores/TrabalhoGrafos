@@ -40,15 +40,16 @@ public class App {
                     grafo.CriarGrafo(grafo);
                     break;
                 case 2:
-                    grafo.imprimirMatrizAdjacencia();
+                    grafo.imprimirGrafo(grafo);
+                    // grafo.imprimirMatrizAdjacencia();
                     
                     break;
                 case 3:
-                    Map<String, ArrayList<String>> listasAdjacencia = grafo.criarListasAdjacencia();
-        System.out.println("Listas de Adjacência:");
-        for (Map.Entry<String, ArrayList<String>> entry : listasAdjacencia.entrySet()) {
-            System.out.println(entry.getKey() + " -> " + entry.getValue());
-        }
+        //             Map<String, ArrayList<String>> listasAdjacencia = grafo.criarListasAdjacencia();
+        // System.out.println("Listas de Adjacência:");
+        // for (Map.Entry<String, ArrayList<String>> entry : listasAdjacencia.entrySet()) {
+        //     System.out.println(entry.getKey() + " -> " + entry.getValue());
+        // }
                     break;
                 case 4:
                     

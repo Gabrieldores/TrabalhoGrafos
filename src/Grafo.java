@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
 
 public class Grafo <Tipo> {
@@ -69,6 +70,27 @@ public class Grafo <Tipo> {
         }
 
         System.out.println("Grafo criado!!!");
+    }
+
+    public void imprimirGrafo(Grafo<Tipo> grafo) {
+        int vertice = this.vertices.size();
+        int arestas = this.arestas.size(); 
+
+        int numMaxArestas = (vertice * (vertice - 1)) / 2;
+
+        boolean isDenso = arestas > numMaxArestas / 2;
+
+        if(isDenso) {
+            System.out.println("O grafo é denso");
+            imprimirMatrizAdjacencia();
+        }else{
+             Map<Tipo, ArrayList<Tipo>> listasAdjacencia = grafo.criarListasAdjacencia();
+        System.out.println("Listas de Adjacência:");
+            for (Entry<Tipo, ArrayList<Tipo>> entry : listasAdjacencia.entrySet()) {
+                System.out.println(entry.getKey() + " -> " + entry.getValue());
+            }
+        }
+
     }
 
     public void imprimirMatrizAdjacencia() {
