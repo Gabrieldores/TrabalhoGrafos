@@ -1,15 +1,40 @@
 /*
  * Tarefas : - 
- * - lista de adjascencia 
- * - Depois fazer a verificação se um grafo ele é denso ou esparso
+ * - Depois fazer a verificação se uclm grafo ele é denso ou esparso
  * - Verificação em DIMACS
  */
 
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 
 public class App {
+
+    public static void ArquivoDimacs(){
+        try {
+            FileReader arquivoDimacs = new FileReader("Dimacs.txt");
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        Scanner leitura = new Scanner("Dimacs.txt");
+
+       String PrimeiraLinha = leitura.nextLine();
+       String[] Verifica;
+
+       Verifica = PrimeiraLinha.split(PrimeiraLinha);
+       
+
+        while (leitura.hasNextLine()) {
+        String linha = leitura.nextLine();
+        String [] atual = linha.split(linha);
+
+          
+            
+        }
+    }
 
        public static void main(String[] args) throws Exception {
         int escolha;
@@ -41,15 +66,14 @@ public class App {
                     break;
                 case 2:
                     grafo.imprimirGrafo(grafo);
-                    // grafo.imprimirMatrizAdjacencia();
                     
                     break;
                 case 3:
-        //             Map<String, ArrayList<String>> listasAdjacencia = grafo.criarListasAdjacencia();
-        // System.out.println("Listas de Adjacência:");
-        // for (Map.Entry<String, ArrayList<String>> entry : listasAdjacencia.entrySet()) {
-        //     System.out.println(entry.getKey() + " -> " + entry.getValue());
-        // }
+                    Map<String, ArrayList<String>> listasAdjacencia = grafo.criarListasAdjacencia();
+        System.out.println("Listas de Adjacência:");
+        for (Map.Entry<String, ArrayList<String>> entry : listasAdjacencia.entrySet()) {
+            System.out.println(entry.getKey() + " -> " + entry.getValue());
+        }
                     break;
                 case 4:
                     

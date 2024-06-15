@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
 
+
 public class Grafo <Tipo> {
     private ArrayList<Vertice<Tipo>> vertices;
     private ArrayList<Aresta<Tipo>> arestas;
@@ -72,27 +73,6 @@ public class Grafo <Tipo> {
         System.out.println("Grafo criado!!!");
     }
 
-    public void imprimirGrafo(Grafo<Tipo> grafo) {
-        int vertice = this.vertices.size();
-        int arestas = this.arestas.size(); 
-
-        int numMaxArestas = (vertice * (vertice - 1)) / 2;
-
-        boolean isDenso = arestas > numMaxArestas / 2;
-
-        if(isDenso) {
-            System.out.println("O grafo é denso");
-            imprimirMatrizAdjacencia();
-        }else{
-             Map<Tipo, ArrayList<Tipo>> listasAdjacencia = grafo.criarListasAdjacencia();
-        System.out.println("Listas de Adjacência:");
-            for (Entry<Tipo, ArrayList<Tipo>> entry : listasAdjacencia.entrySet()) {
-                System.out.println(entry.getKey() + " -> " + entry.getValue());
-            }
-        }
-
-    }
-
     public void imprimirMatrizAdjacencia() {
         int tamanho = this.vertices.size();
         int[][] matrizAdjacencia = new int[tamanho][tamanho];
@@ -136,5 +116,25 @@ public class Grafo <Tipo> {
         return listasAdjacencia;
     }
 
+    public void imprimirGrafo(Grafo<Tipo> grafo) {
+        int vertice = this.vertices.size();
+        int arestas = this.arestas.size(); 
+
+        int numMaxArestas = (vertice * (vertice - 1)) / 2;
+
+        boolean isDenso = arestas > numMaxArestas / 2;
+
+        if(isDenso) {
+            System.out.println("O grafo é denso");
+            imprimirMatrizAdjacencia();
+        }else{
+             Map<Tipo, ArrayList<Tipo>> listasAdjacencia = grafo.criarListasAdjacencia();
+        System.out.println("Listas de Adjacência:");
+            for (Entry<Tipo, ArrayList<Tipo>> entry : listasAdjacencia.entrySet()) {
+                System.out.println(entry.getKey() + " -> " + entry.getValue());
+            }
+        }
+
+    }
 
 }
