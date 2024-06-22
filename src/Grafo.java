@@ -195,8 +195,123 @@ public void imprimirGrauVertice(Tipo dado) {
     } else {
         System.out.println("Vértice " + dado + " não encontrado.");
     }
+  }
+
+  public boolean saoAdjacentes(Tipo dadoVertice1, Tipo dadoVertice2) {
+    Vertice<Tipo> vertice1 = getVertice(dadoVertice1);
+    Vertice<Tipo> vertice2 = getVertice(dadoVertice2);
+    Boolean verifica = false;
+
+    if (vertice1 != null && vertice2 != null) {
+        // Verifica se há uma aresta de vertice1 para vertice2
+        for (Aresta<Tipo> aresta : vertice1.getArestasSaida()) {
+            if (aresta.getSaida().equals(vertice2)) {
+                verifica = true;
+                return verifica;
+            }
+        }
+        // Verifica se há uma aresta de vertice2 para vertice1 (se o grafo for não-direcionado)
+        for (Aresta<Tipo> aresta : vertice1.getArestasEntrada()) {
+            if (aresta.getInicio().equals(vertice2)) {
+                verifica = true;
+                return verifica;
+            }
+        }
+        
+    }
+        return verifica;
+    }
+
+    public boolean substituirPesoAresta(Tipo dadoInicio, Tipo dadoSaida, double novoPeso) {
+        Vertice<Tipo> inicio = getVertice(dadoInicio);
+        Vertice<Tipo> saida = getVertice(dadoSaida);
+        boolean verifica = false;
+    
+        if (inicio != null && saida != null) {
+            // Procura a aresta de inicio para saida
+            for (Aresta<Tipo> aresta : inicio.getArestasSaida()) {
+                if (aresta.getSaida().equals(saida)) {
+                    aresta.setPeso(novoPeso);
+                    verifica = true;
+                }
+            }
+        }
+        return verifica;
+  }
+
+  public void BuscaemLargura() {
+    ArrayList<Vertice<Tipo>> marcados = new ArrayList<>();
+    ArrayList<Vertice<Tipo>> fila = new ArrayList<>();
+    Map<Vertice<Tipo>, Integer> nivel = new HashMap<>();
+    Map<Vertice<Tipo>, Vertice<Tipo>> pai = new HashMap<>();
+    int iteracao = 0;
+
+    Vertice<Tipo> inicial = this.vertices.get(0); // Vértice inicial para iniciar a busca
+    marcados.add(inicial);
+    fila.add(inicial);
+    nivel.put(inicial, 0);
+    pai.put(inicial, null);
+
+    System.out.println("Busca em Largura a partir do vértice " + inicial.getDado() + ":");
+
+    while (!fila.isEmpty()) {
+        Vertice<Tipo> visitado = fila.remove(0);
+        int nivelAtual = nivel.get(visitado);
+        iteracao++;
+
+        System.out.println("Vértice: " + visitado.getDado() + ", Nível: " + nivelAtual + ", Iteração: " + iteracao);
+
+        for (Aresta<Tipo> aresta : visitado.getArestasSaida()) {
+            Vertice<Tipo> proximo = aresta.getSaida();
+            if (!marcados.contains(proximo)) {
+                marcados.add(proximo);
+                fila.add(proximo);
+                nivel.put(proximo, nivelAtual + 1);
+                pai.put(proximo, visitado);
+            }
+        }
+    }
+
+}
+public void trocarVertices(Tipo dado1, Tipo dado2) {
+    Vertice<Tipo> vertice1 = getVertice(dado1);
+    Vertice<Tipo> vertice2 = getVertice(dado2);
+
+    if (vertice1 == null || vertice2 == null) {
+        System.out.println("Um ou ambos os vértices não foram encontrados.");
+        return;
+    }
+
+    // Trocar as referências nas arestas de entrada e saída dos vértices
+    for (Aresta<Tipo> aresta : vertice1.getArestasEntrada()) {
+        if (aresta.getInicio().equals(vertice1)) {
+            aresta.setInicio(vertice2);
+        }
+    }
+    for (Aresta<Tipo> aresta : vertice1.getArestasSaida()) {
+        if (aresta.getSaida().equals(vertice1)) {
+            aresta.setSaida(vertice2);
+        }
+    }
+
+    for (Aresta<Tipo> aresta : vertice2.getArestasEntrada()) {
+        if (aresta.getInicio().equals(vertice2)) {
+            aresta.setInicio(vertice1);
+        }
+    }
+    for (Aresta<Tipo> aresta : vertice2.getArestasSaida()) {
+        if (aresta.getSaida().equals(vertice2)) {
+            aresta.setSaida(vertice1);
+        }
+    }
+    
 }
 }
+  
+
+
+
+
 
 
 

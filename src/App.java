@@ -1,8 +1,3 @@
-/*
- * Tarefas : - 
- * - Depois fazer a verificação se uclm grafo ele é denso ou esparso
- * - Verificação em DIMACS
- */
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,6 +49,7 @@ public class App {
         Scanner ler = new Scanner(System.in);
         Grafo<String> grafo = new Grafo<String>();
         String x;
+        String y; //Somente usado para saber se há adjascencia entre os vértices
 
 
         do {
@@ -123,18 +119,35 @@ public class App {
                     
                     break;
                 case 9:
-                  
+                System.out.println("Digite os dois vértices para saber se são Adjacentes");
+                x = ler.next();
+                y = ler.next();
+                
+                grafo.saoAdjacentes(x, y);
                     break;
                 case 10:
+                int peso;
+                System.out.println("Digite os dois vértices para alterar o peso da aresta :");
+                x = ler.next();
+                y = ler.next();
+                System.out.println("Digite o peso desejado :");
+                peso = ler.nextInt();
 
+                grafo.substituirPesoAresta(x, y, peso);
                     break;
                 case 11:
+                System.out.println("Digite os dois vértices para alterar os seus lugares:");
+                x = ler.next();
+                y = ler.next();
+                grafo.trocarVertices(x, y);
 
                     break;
                 case 12:
-
+                    grafo.BuscaemLargura();
                     break;
                 case 13:
+
+                //Parte Sarah
 
                     break;
                 case 14:
