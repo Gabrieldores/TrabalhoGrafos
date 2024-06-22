@@ -136,5 +136,69 @@ public class Grafo <Tipo> {
         }
 
     }
+    public void imprimirArestasAdjacentes(Tipo dado) {
+        Vertice<Tipo> vertice = getVertice(dado);
+        if (vertice != null) {
+            System.out.println("Arestas adjacentes ao vértice " + dado + ":");
+            for (Aresta<Tipo> aresta : vertice.getArestasAdjacentes(vertice)) {
+                System.out.println(aresta.getInicio().getDado() + " -> " + aresta.getSaida().getDado() + " (Peso: " + aresta.getPeso() + ")");
+            }
+        } else {
+            System.out.println("Vértice " + dado + " não encontrado.");
+        }
+    }
 
+  public void imprimirVerticesAdjacentes(Tipo dado) {
+    Vertice<Tipo> vertice = getVertice(dado);
+    if (vertice != null) {
+        ArrayList<Vertice<Tipo>> verticesAdjacentes = vertice.getVerticesAdjacentes(vertice);
+        System.out.println("Vértices adjacentes ao vértice " + dado + ":");
+        for (Vertice<Tipo> adjacente : verticesAdjacentes) {
+            System.out.println(adjacente.getDado());
+        }
+    } else {
+        System.out.println("Vértice " + dado + " não encontrado.");
+    }
 }
+
+public void imprimirArestasIncidentes(Tipo dado) {
+    Vertice<Tipo> vertice = getVertice(dado);
+    if (vertice != null) {
+        ArrayList<Aresta<Tipo>> arestasIncidentes = vertice.getArestasIncidentes(vertice);
+        System.out.println("Arestas incidentes ao vértice " + dado + ":");
+        for (Aresta<Tipo> aresta : arestasIncidentes) {
+            System.out.println(aresta.getInicio().getDado() + " -> " + aresta.getSaida().getDado() + " (Peso: " + aresta.getPeso() + ")");
+        }
+    } else {
+        System.out.println("Vértice " + dado + " não encontrado.");
+    }
+}
+
+public void imprimirVerticesIncidentes(Tipo dado) {
+    Vertice<Tipo> vertice = getVertice(dado);
+    if (vertice != null) {
+        ArrayList<Vertice<Tipo>> verticesIncidentes = vertice.getVerticesIncidentes(vertice);
+        System.out.println("Vértices incidentes ao vértice " + dado + ":");
+        for (Vertice<Tipo> adjacente : verticesIncidentes) {
+            System.out.println(adjacente.getDado());
+        }
+    } else {
+        System.out.println("Vértice " + dado + " não encontrado.");
+    }
+}
+
+public void imprimirGrauVertice(Tipo dado) {
+    Vertice<Tipo> vertice = getVertice(dado);
+    if (vertice != null) {
+        int grau = vertice.grau(); // Chama o método grau() diretamente no objeto vertice
+        System.out.println("Grau do vértice " + dado + ": " + grau);
+    } else {
+        System.out.println("Vértice " + dado + " não encontrado.");
+    }
+}
+}
+
+
+
+
+

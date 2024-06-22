@@ -5,6 +5,7 @@
  */
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.io.FileNotFoundException;
@@ -12,34 +13,47 @@ import java.io.FileReader;
 
 public class App {
 
-    public static void ArquivoDimacs(){
+    public static void ArquivoDimacs(Grafo<String> g) {
         try {
-            FileReader arquivoDimacs = new FileReader("Dimacs.txt");
+            FileReader file = new FileReader("src/Dimacs.txt");
+            Scanner arq = new Scanner(file);
+            Map<String, Boolean> verticeAdd = new HashMap<>();
+
+            if (arq.hasNextLine()) {
+                arq.nextLine(); 
+            }
+
+            while (arq.hasNextLine()) {
+                String linha = arq.nextLine();
+                String[] atual = linha.split(" ");  
+
+                String origem = atual[0];
+                String destino = atual[1];
+                double peso = Double.parseDouble(atual[2]);
+
+                if (!verticeAdd.containsKey(origem)) {
+                    g.adicionarVertice(origem);
+                    verticeAdd.put(origem, true);
+                }
+                if (!verticeAdd.containsKey(destino)) {
+                    g.adicionarVertice(destino);
+                    verticeAdd.put(destino, true);
+                }
+
+                g.adicionarAresta(peso, origem, destino);
+            }
+
+            arq.close();
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        Scanner leitura = new Scanner("Dimacs.txt");
-
-       String PrimeiraLinha = leitura.nextLine();
-       String[] Verifica;
-
-       Verifica = PrimeiraLinha.split(PrimeiraLinha);
-       
-
-        while (leitura.hasNextLine()) {
-        String linha = leitura.nextLine();
-        String [] atual = linha.split(linha);
-
-          
-            
-        }
-    }
+    } 
 
        public static void main(String[] args) throws Exception {
         int escolha;
         Scanner ler = new Scanner(System.in);
         Grafo<String> grafo = new Grafo<String>();
+        String x;
 
 
         do {
@@ -54,9 +68,14 @@ public class App {
             System.out.println("5 - Todos os vértices adjacentes do vértice escolhido");
             System.out.println("6 - Todas as arestas incidentes do vértice escolhido");
             System.out.println("7 - Todos os vértices incidentes do vértice escolhido");
-            System.out.println("8 - Busca em largura");
-            System.out.println("9 - Busca em profundidade");
-            System.out.println("0 - Sair");
+            System.out.println("8 - Imprimir o grau de um vértice");
+            System.out.println("9 - Determinar se dois vértices são adjascentes");
+            System.out.println("10 - Substituir o peso de uma aresta ");
+            System.out.println("11 - Trocar dois vértices ");
+            System.out.println("12 - Busca em largura");
+            System.out.println("13 - Busca em profundidade");
+            System.out.println("14 - Algoritmo de Drijskta");
+            System.out.println("15 - Algoritmo de Floyd-Warshall");
             System.out.print("Escolha uma opção: ");
             escolha = ler.nextInt();
 
@@ -69,29 +88,60 @@ public class App {
                     
                     break;
                 case 3:
-                    Map<String, ArrayList<String>> listasAdjacencia = grafo.criarListasAdjacencia();
-        System.out.println("Listas de Adjacência:");
-        for (Map.Entry<String, ArrayList<String>> entry : listasAdjacencia.entrySet()) {
-            System.out.println(entry.getKey() + " -> " + entry.getValue());
-        }
+                    ArquivoDimacs(grafo);
+        
                     break;
                 case 4:
+                    System.out.println("Digite o vertices para descobrir as arestas adjascentes : ");
+                    x = ler.next();
+                    grafo.imprimirArestasAdjacentes(x);
                     
                     break;
                 case 5:
+                    System.out.println("Digite o vértice para descobrir os seus vértices adjascentes : ");
+                    x = ler.next();
+                    grafo.imprimirVerticesAdjacentes(x);
                    
                     break;
                 case 6:
+                System.out.println("Digite o vértice para descobrir os seus vértices incidentes : ");
+                    x = ler.next();
+                    grafo.imprimirVerticesIncidentes(x);
                     
                     break;
                 case 7:
+                System.out.println("Digite o vértice para descobrir as suas arestas incidentes : ");
+                    x = ler.next();
+                    grafo.imprimirArestasIncidentes(x);
+                
                    
                     break;
                 case 8:
+                System.out.println("Digite o Vértice para saber seu grau :");
+                x = ler.next();
+                grafo.imprimirGrauVertice(x);
                     
                     break;
                 case 9:
                   
+                    break;
+                case 10:
+
+                    break;
+                case 11:
+
+                    break;
+                case 12:
+
+                    break;
+                case 13:
+
+                    break;
+                case 14:
+
+                    break;
+                case 15:
+
                     break;
                 case 0:
                     System.out.println("Saindo do programa...");
