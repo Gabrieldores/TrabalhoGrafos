@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Scanner;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-
 public class App {
 
     public static void ArquivoDimacs(Grafo<String> g) {
@@ -146,9 +145,10 @@ public class App {
                     grafo.BuscaemLargura();
                     break;
                 case 13:
-
-                //Parte Sarah
-
+                System.out.println("Digite o vértices");
+                x = ler.next();
+                Vertice<String> vertice = grafo.getVertice(x);
+                    grafo.buscaEmProfundidade(vertice);
                     break;
                 case 14:
 

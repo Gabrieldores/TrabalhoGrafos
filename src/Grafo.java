@@ -1,7 +1,9 @@
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Scanner;
 
 
@@ -13,7 +15,7 @@ public class Grafo <Tipo> {
         this.vertices = new ArrayList<Vertice<Tipo>>();
         this.arestas = new ArrayList<Aresta<Tipo>>();
     }
-   
+
 
     public void adicionarVertice(Tipo dado){
         Vertice<Tipo> novoVertice = new Vertice<Tipo>(dado);
@@ -73,6 +75,28 @@ public class Grafo <Tipo> {
         System.out.println("Grafo criado!!!");
     }
 
+    public void imprimirGrafo(Grafo<Tipo> grafo) {
+        int vertice = this.vertices.size();
+        int arestas = this.arestas.size(); 
+
+        int numMaxArestas = (vertice * (vertice - 1)) / 2;
+
+        boolean isDenso = arestas > numMaxArestas / 2;
+
+        if(isDenso) {
+            System.out.println("O grafo é denso");
+            imprimirMatrizAdjacencia();
+        }else{
+            System.out.println("O grafo é denso");
+            Map<Tipo, ArrayList<Tipo>> listasAdjacencia = grafo.criarListasAdjacencia();
+            System.out.println("Listas de Adjacência:");
+            for (Map.Entry<Tipo, ArrayList<Tipo>> entry : listasAdjacencia.entrySet()) {
+                System.out.println(entry.getKey() + " -> " + entry.getValue());
+            }
+        }
+
+    }
+
     public void imprimirMatrizAdjacencia() {
         int tamanho = this.vertices.size();
         int[][] matrizAdjacencia = new int[tamanho][tamanho];
@@ -116,25 +140,26 @@ public class Grafo <Tipo> {
         return listasAdjacencia;
     }
 
-    public void imprimirGrafo(Grafo<Tipo> grafo) {
-        int vertice = this.vertices.size();
-        int arestas = this.arestas.size(); 
-
-        int numMaxArestas = (vertice * (vertice - 1)) / 2;
-
-        boolean isDenso = arestas > numMaxArestas / 2;
-
-        if(isDenso) {
-            System.out.println("O grafo é denso");
-            imprimirMatrizAdjacencia();
-        }else{
-             Map<Tipo, ArrayList<Tipo>> listasAdjacencia = grafo.criarListasAdjacencia();
-        System.out.println("Listas de Adjacência:");
-            for (Entry<Tipo, ArrayList<Tipo>> entry : listasAdjacencia.entrySet()) {
-                System.out.println(entry.getKey() + " -> " + entry.getValue());
-            }
+    public void imprimirArestaAdjacente() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Qual indice da aresta você deseja alterar? ");
+        int indiceAresta = sc.nextInt();
+        sc.nextLine(); 
+        // aresta adjacente é que tem um vértice em comum 
+        if (indiceAresta < 0 || indiceAresta >= this.arestas.size()) {
+            System.out.println("Índice de aresta inválido.");
         }
 
+        Aresta<Tipo> arestaSelecionada = this.arestas.get(indiceAresta);
+        Vertice<Tipo> inicio = arestaSelecionada.getInicio();
+        Vertice<Tipo> fim = arestaSelecionada.getSaida();
+
+        System.out.println("Arestas adjacentes à aresta (" + inicio.getDado() + " -> " + fim.getDado() + "):");
+        for (Aresta<Tipo> aresta : arestas) {
+            if (aresta != arestaSelecionada && (aresta.getInicio().equals(inicio) || aresta.getInicio().equals(fim) || aresta.getSaida().equals(inicio) || aresta.getSaida().equals(fim))) {
+                System.out.println(aresta.getInicio().getDado() + " -> " + aresta.getSaida().getDado());
+            }
+        }
     }
     public void imprimirArestasAdjacentes(Tipo dado) {
         Vertice<Tipo> vertice = getVertice(dado);
@@ -217,7 +242,7 @@ public void imprimirGrauVertice(Tipo dado) {
                 return verifica;
             }
         }
-        
+
     }
         return verifica;
     }
@@ -226,7 +251,7 @@ public void imprimirGrauVertice(Tipo dado) {
         Vertice<Tipo> inicio = getVertice(dadoInicio);
         Vertice<Tipo> saida = getVertice(dadoSaida);
         boolean verifica = false;
-    
+
         if (inicio != null && saida != null) {
             // Procura a aresta de inicio para saida
             for (Aresta<Tipo> aresta : inicio.getArestasSaida()) {
@@ -273,6 +298,52 @@ public void imprimirGrauVertice(Tipo dado) {
     }
 
 }
+
+public void buscaEmProfundidade(Vertice<Tipo> verticeInicial) {
+    ArrayList<Vertice<Tipo>> marcados = new ArrayList<>();
+    Deque<Vertice<Tipo>> pilha = new ArrayDeque<>(); // Linha 313 onde o erro ocorre
+    Map<Vertice<Tipo>, Integer> tempoDescoberta = new HashMap<>();
+    Map<Vertice<Tipo>, Integer> tempoFinalizacao = new HashMap<>();
+    int tempo = 0;
+
+    pilha.push(verticeInicial);
+
+    System.out.println("Busca em Profundidade a partir do vértice " + verticeInicial.getDado() + ":");
+
+    while (!pilha.isEmpty()) {
+        Vertice<Tipo> visitado = pilha.peek();
+        if (!marcados.contains(visitado)) {
+            marcados.add(visitado);
+            tempo++;
+            tempoDescoberta.put(visitado, tempo);
+            System.out.println("Vértice: " + visitado.getDado() + ", Descoberta: " + tempoDescoberta.get(visitado));
+        }
+
+        boolean encontrouAdjacenteNaoMarcado = false;
+        List<Vertice<Tipo>> adjacentes = visitado.getVerticesAdjacentes(visitado); // vertices adjacentes
+
+        for (Vertice<Tipo> adj : adjacentes) {
+            if (!marcados.contains(adj)) {
+                pilha.push(adj);
+                encontrouAdjacenteNaoMarcado = true;
+                break;
+            }
+        }
+
+        if (!encontrouAdjacenteNaoMarcado) {
+            tempo++;
+            tempoFinalizacao.put(visitado, tempo);
+            pilha.pop();
+            System.out.println("Vértice: " + visitado.getDado() + ", Finalização: " + tempoFinalizacao.get(visitado));
+        }
+    }
+
+    System.out.println("\nTempos de descoberta e finalização:");
+    for (Vertice<Tipo> vertice : tempoDescoberta.keySet()) {
+        System.out.println("Vértice: " + vertice.getDado() + ", Descoberta: " + tempoDescoberta.get(vertice) + ", Finalização: " + tempoFinalizacao.get(vertice));
+    }
+}
+
 public void trocarVertices(Tipo dado1, Tipo dado2) {
     Vertice<Tipo> vertice1 = getVertice(dado1);
     Vertice<Tipo> vertice2 = getVertice(dado2);
@@ -304,10 +375,10 @@ public void trocarVertices(Tipo dado1, Tipo dado2) {
             aresta.setSaida(vertice1);
         }
     }
-    
+
 }
+
 }
-  
 
 
 

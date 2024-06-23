@@ -4,14 +4,14 @@ public class Vertice <Tipo> {
     private Tipo dado;
     private ArrayList <Aresta<Tipo>> arestasEntrada;
     private ArrayList <Aresta<Tipo>> arestaSaida;
-   
+
 
     public void setArestasEntrada(ArrayList<Aresta<Tipo>> arestasEntrada) {
         this.arestasEntrada = arestasEntrada;
     }
 
 
-    
+
     public Vertice(Tipo dado){
         this.dado = dado;
         this.arestasEntrada = new ArrayList<Aresta<Tipo>>();
@@ -71,7 +71,7 @@ public class Vertice <Tipo> {
     public ArrayList<Vertice<Tipo>> getVerticesAdjacentes(Vertice<Tipo> vertice) {
         ArrayList<Vertice<Tipo>> verticesAdjacentes = new ArrayList<>();
 
-        
+
         if (this.equals(vertice)) {
             // Adiciona vértices de saída das arestas de saída
             for (int i = 0; i < arestaSaida.size(); i++) {
@@ -123,6 +123,5 @@ public class Vertice <Tipo> {
         return arestaSaida.size() + arestasEntrada.size();
     }
 
-
-    
 }
+
