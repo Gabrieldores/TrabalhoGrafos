@@ -151,10 +151,11 @@ public class App {
                     grafo.buscaEmProfundidade(vertice);
                     break;
                 case 14:
+                grafo.algoritmoDijkstra();
 
                     break;
                 case 15:
-
+                grafo.algoritmoFloydWarshall();
                     break;
                 case 0:
                     System.out.println("Saindo do programa...");

@@ -1,10 +1,15 @@
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Scanner;
+import java.util.Stack;
 
 
 public class Grafo <Tipo> {
@@ -265,13 +270,25 @@ public void imprimirGrauVertice(Tipo dado) {
   }
 
   public void BuscaemLargura() {
+    Scanner scanner = new Scanner(System.in);
+
+    // Solicita ao usuário para escolher o vértice inicial
+    System.out.println("Digite o dado do vértice inicial para a busca em largura:");
+    Tipo dadoInicial = (Tipo) scanner.nextLine();
+    Vertice<Tipo> inicial = getVertice(dadoInicial);
+
+    // Verifica se o vértice inicial existe
+    if (inicial == null) {
+        System.out.println("Vértice " + dadoInicial + " não encontrado.");
+        return;
+    }
+
     ArrayList<Vertice<Tipo>> marcados = new ArrayList<>();
     ArrayList<Vertice<Tipo>> fila = new ArrayList<>();
     Map<Vertice<Tipo>, Integer> nivel = new HashMap<>();
     Map<Vertice<Tipo>, Vertice<Tipo>> pai = new HashMap<>();
     int iteracao = 0;
 
-    Vertice<Tipo> inicial = this.vertices.get(0); // Vértice inicial para iniciar a busca
     marcados.add(inicial);
     fila.add(inicial);
     nivel.put(inicial, 0);
@@ -284,7 +301,10 @@ public void imprimirGrauVertice(Tipo dado) {
         int nivelAtual = nivel.get(visitado);
         iteracao++;
 
-        System.out.println("Vértice: " + visitado.getDado() + ", Nível: " + nivelAtual + ", Iteração: " + iteracao);
+        Vertice<Tipo> paiAtual = pai.get(visitado);
+        String paiStr = (paiAtual != null) ? paiAtual.getDado().toString() : "null";
+
+        System.out.println("Vértice: " + visitado.getDado() + ", Nível: " + nivelAtual + ", Pai: " + paiStr + ", Iteração: " + iteracao);
 
         for (Aresta<Tipo> aresta : visitado.getArestasSaida()) {
             Vertice<Tipo> proximo = aresta.getSaida();
@@ -296,7 +316,6 @@ public void imprimirGrauVertice(Tipo dado) {
             }
         }
     }
-
 }
 
 public void buscaEmProfundidade(Vertice<Tipo> verticeInicial) {
@@ -378,7 +397,151 @@ public void trocarVertices(Tipo dado1, Tipo dado2) {
 
 }
 
+public void algoritmoDijkstra() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Digite o dado do vértice inicial para o algoritmo de Dijkstra:");
+        Tipo dadoInicial = (Tipo) scanner.nextLine();
+        Vertice<Tipo> inicial = getVertice(dadoInicial);
+
+        if (inicial == null) {
+            System.out.println("Vértice " + dadoInicial + " não encontrado.");
+            return;
+        }
+
+        System.out.println("Digite o dado do vértice final para o algoritmo de Dijkstra:");
+        Tipo dadoFinal = (Tipo) scanner.nextLine();
+        Vertice<Tipo> finalVertice = getVertice(dadoFinal);
+
+        if (finalVertice == null) {
+            System.out.println("Vértice " + dadoFinal + " não encontrado.");
+            return;
+        }
+
+        Map<Vertice<Tipo>, Double> distancias = new HashMap<>();
+        Map<Vertice<Tipo>, Vertice<Tipo>> predecessores = new HashMap<>();
+        PriorityQueue<Vertice<Tipo>> filaPrioridade = new PriorityQueue<>(Comparator.comparing(distancias::get));
+
+        for (Vertice<Tipo> vertice : this.vertices) {
+            if (vertice.equals(inicial)) {
+                distancias.put(vertice, 0.0);
+            } else {
+                distancias.put(vertice, Double.POSITIVE_INFINITY);
+            }
+            filaPrioridade.add(vertice);
+        }
+
+        while (!filaPrioridade.isEmpty()) {
+            Vertice<Tipo> atual = filaPrioridade.poll();
+            for (Aresta<Tipo> aresta : atual.getArestasSaida()) {
+                Vertice<Tipo> adjacente = aresta.getSaida();
+                double novaDistancia = distancias.get(atual) + aresta.getPeso();
+                if (novaDistancia < distancias.get(adjacente)) {
+                    filaPrioridade.remove(adjacente);
+                    distancias.put(adjacente, novaDistancia);
+                    predecessores.put(adjacente, atual);
+                    filaPrioridade.add(adjacente);
+                }
+            }
+        }
+
+        if (distancias.get(finalVertice) == Double.POSITIVE_INFINITY) {
+            System.out.println("Não existe caminho do vértice " + dadoInicial + " ao vértice " + dadoFinal + ".");
+        } else {
+            System.out.println("Distância do vértice " + dadoInicial + " ao vértice " + dadoFinal + ": " + distancias.get(finalVertice));
+            List<Vertice<Tipo>> caminho = new ArrayList<>();
+            for (Vertice<Tipo> vertice = finalVertice; vertice != null; vertice = predecessores.get(vertice)) {
+                caminho.add(vertice);
+            }
+            Collections.reverse(caminho);
+            System.out.print("Caminho: ");
+            for (Vertice<Tipo> vertice : caminho) {
+                System.out.print(vertice.getDado() + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    public void algoritmoFloydWarshall() {
+        int n = this.vertices.size();
+        double[][] distancias = new double[n][n];
+        Vertice<Tipo>[][] predecessores = new Vertice[n][n];
+
+        // Inicialização das distâncias
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(distancias[i], Double.POSITIVE_INFINITY);
+            distancias[i][i] = 0;
+        }
+
+        // Configuração das arestas
+        for (Aresta<Tipo> aresta : this.arestas) {
+            int u = this.vertices.indexOf(aresta.getInicio());
+            int v = this.vertices.indexOf(aresta.getSaida());
+            distancias[u][v] = aresta.getPeso();
+            predecessores[u][v] = aresta.getInicio();
+        }
+
+        // Algoritmo de Floyd-Warshall
+        for (int k = 0; k < n; k++) {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (distancias[i][j] > distancias[i][k] + distancias[k][j]) {
+                        distancias[i][j] = distancias[i][k] + distancias[k][j];
+                        predecessores[i][j] = predecessores[k][j];
+                    }
+                }
+            }
+        }
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Digite o dado do vértice inicial para o algoritmo de Floyd-Warshall:");
+        Tipo dadoInicial = (Tipo) scanner.nextLine();
+        Vertice<Tipo> inicial = getVertice(dadoInicial);
+
+        if (inicial == null) {
+            System.out.println("Vértice " + dadoInicial + " não encontrado.");
+            return;
+        }
+
+        int inicioIdx = this.vertices.indexOf(inicial);
+        System.out.println("Menor distância do vértice " + dadoInicial + " para todos os outros vértices:");
+
+        for (int i = 0; i < n; i++) {
+            if (distancias[inicioIdx][i] == Double.POSITIVE_INFINITY) {
+                System.out.println("Não existe caminho do vértice " + dadoInicial + " para o vértice " + this.vertices.get(i).getDado() + ".");
+            } else {
+                System.out.println("Distância para " + this.vertices.get(i).getDado() + ": " + distancias[inicioIdx][i]);
+                System.out.print("Caminho: ");
+                imprimirCaminho(inicial, this.vertices.get(i), predecessores);
+                System.out.println();
+            }
+        }
+    }
+
+    private void imprimirCaminho(Vertice<Tipo> inicio, Vertice<Tipo> fim, Vertice<Tipo>[][] predecessores) {
+        Stack<Vertice<Tipo>> caminho = new Stack<>();
+        Vertice<Tipo> atual = fim;
+
+        while (atual != null && !atual.equals(inicio)) {
+            caminho.push(atual);
+            int idxAtual = this.vertices.indexOf(atual);
+            int idxPredecessor = this.vertices.indexOf(predecessores[this.vertices.indexOf(inicio)][idxAtual]);
+            atual = this.vertices.get(idxPredecessor);
+        }
+
+        if (atual == null) {
+            System.out.print("Nenhum caminho encontrado.");
+            return;
+        }
+
+        System.out.print(inicio.getDado());
+        while (!caminho.isEmpty()) {
+            System.out.print(" -> " + caminho.pop().getDado());
+        }
+    }
 }
+
+
+
 
 
 
